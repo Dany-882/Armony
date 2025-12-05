@@ -1,0 +1,38 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_inicio"
+        android:title="Inicio / Dashboard"
+        android:icon="@drawable/ic_home" />
+
+    <item
+        android:id="@+id/nav_clases"
+        android:title="Mis Clases"
+        android:icon="@drawable/ic_class" />
+
+    <item
+        android:id="@+id/nav_videojuegos"
+        android:title="Videojuegos"
+        android:icon="@drawable/ic_games" />
+
+    <item
+        android:id="@+id/nav_mascota"
+        android:title="Mi Mascota"
+        android:icon="@drawable/ic_pet" />
+
+    <item
+        android:id="@+id/nav_progreso"
+        android:title="Mi Progreso"
+        android:icon="@drawable/ic_stats" />
+
+    <item
+        android:id="@+id/nav_config"
+        android:title="Configuración"
+        android:icon="@drawable/ic_settings" />
+
+    <item
+        android:id="@+id/nav_logout"
+        android:title="Cerrar sesión"
+        android:icon="@drawable/ic_logout" />
+
+</menu>
