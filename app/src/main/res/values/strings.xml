@@ -2,4 +2,6 @@
     <string name="app_name">Perfildealumno</string>
     <string name="open">Abrir</string>
     <string name="close">Cerrar</string>
+    <string name="navigation_drawer_open">Abrir menú</string>
+    <string name="navigation_drawer_close">Cerrar menú</string>
 </resources>

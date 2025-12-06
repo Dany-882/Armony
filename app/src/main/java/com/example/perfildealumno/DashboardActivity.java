@@ -1,53 +1,102 @@
 package com.example.perfildealumno;
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.view.MenuItem;
+import android.widget.Button;
 
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class DashboardActivity extends AppCompatActivity {
-    TextView tvUserName, tvPoints, tvClasses, tvGames, tvStreak, tvTasks;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    String userId; // Lo recibes desde Login
+
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+    Toolbar toolbar;
+
+    Button btnVisitPet;
+
+    String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        tvUserName = findViewById(R.id.tvUserName);
-        tvPoints = findViewById(R.id.tvPoints);
-        tvClasses = findViewById(R.id.tvClasses);
-        tvGames = findViewById(R.id.tvGames);
-        tvStreak = findViewById(R.id.tvStreak);
-        tvTasks = findViewById(R.id.tvTasks);
-
+        // RECIBIR userId
         userId = getIntent().getStringExtra("userId");
 
-        loadUserData();
+        // 🔥 USAR TUS IDS EXACTOS DEL XML 🔥
+        drawerLayout = findViewById(R.id.dashboard_drawer);
+        navigationView = findViewById(R.id.dashboard_navigation_view);
+        toolbar = findViewById(R.id.dashboard_toolbar);
+        btnVisitPet = findViewById(R.id.btn_visit_pet);
+
+        setSupportActionBar(toolbar);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close
+        );
+
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        // ------------ NAVIGATION VIEW -------------
+        navigationView.setNavigationItemSelectedListener(item -> {
+
+            int id = item.getItemId();
+
+            if (id == R.id.nav_mascota) {
+                Intent i = new Intent(DashboardActivity.this, PetActivity.class);
+                i.putExtra("userId", userId);
+                startActivity(i);
+            }
+            if (id == R.id.nav_config) {
+                Intent i = new Intent(DashboardActivity.this, SettingsActivity.class);
+                i.putExtra("userId", userId);
+                startActivity(i);
+            }
+            if (id == R.id.nav_logout) { // Asume que este es el ID de tu botón de cerrar sesión
+                // Cerrar sesión en Firebase
+                FirebaseAuth.getInstance().signOut();
+
+                // Volver a MainActivity
+                Intent intent = new Intent(DashboardActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK); // Evita que el usuario pueda volver con "atrás"
+                startActivity(intent);
+                finish(); // Cierra DashboardActivity
+            }
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        });
+
+        // ------------ BOTÓN "VISITAR MASCOTA" -------------
+        btnVisitPet.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardActivity.this, PetActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+        });
+
     }
 
-    private void loadUserData() {
-        DocumentReference ref = db.collection("students").document(userId);
 
-        ref.get().addOnSuccessListener(doc -> {
-            if (doc.exists()) {
 
-                String name = doc.getString("name");
-                long points = doc.contains("points") ? doc.getLong("points") : 0;
-                long classes = doc.contains("classes") ? doc.getLong("classes") : 0;
-                long games = doc.contains("games") ? doc.getLong("games") : 0;
-                long streak = doc.contains("streak") ? doc.getLong("streak") : 0;
 
-                tvUserName.setText(name);
-                tvPoints.setText("Puntos: " + points);
-                tvClasses.setText("Clases completadas: " + classes);
-                tvGames.setText("Juegos completados: " + games);
-                tvStreak.setText("Días de racha: " + streak);
 
-            }
-        });
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }

@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.kapt")
     id("com.google.gms.google-services")
 }
 
@@ -47,6 +48,13 @@ dependencies {
 
     // Firestore (base de datos en la nube)
     implementation("com.google.firebase:firebase-firestore")
+
+    // Firebase Storage (para fotos de perfil)
+    implementation("com.google.firebase:firebase-storage")
+
+    // Glide (para cargar imágenes)
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    kapt("com.github.bumptech.glide:compiler:4.15.1") // notar que es 'kapt' en Kotlin
 
     // Dependencias normales de Android
     implementation("androidx.core:core-ktx:1.12.0")

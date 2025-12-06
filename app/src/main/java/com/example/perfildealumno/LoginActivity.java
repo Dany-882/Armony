@@ -8,9 +8,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity {
+    FirebaseAuth auth = FirebaseAuth.getInstance();
 
     EditText etEmailLogin, etPasswordLogin;
     Button btnLogin;
